@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Navbar } from "./Navbar";
 import { Link, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { GetProducts } from "../Redux/productReducer/action";
+import { DeleteProducts, GetProducts } from "../Redux/productReducer/action";
 
 export const Dashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -58,6 +58,12 @@ export const Dashboard = () => {
     };
     dispatch(GetProducts(page, obj));
   }, [searchParams]);
+
+  const handelDel = (id) => {
+    dispatch(DeleteProducts(id)).then(() => {
+      dispatch(GetProducts());
+    });
+  };
 
   return (
     <div>
@@ -125,8 +131,10 @@ export const Dashboard = () => {
                 <td>{el.gender}</td>
                 <td>{el.category}</td>
                 <td>{el.price}</td>
-                <td>Edit</td>
-                <td>Delete</td>
+                <Link to={`/edit/${el.id}`}>
+                  <td>Edit</td>
+                </Link>
+                <td onClick={() => handelDel(el.id)}>Delete</td>
               </tr>
             ))}
           </tbody>
